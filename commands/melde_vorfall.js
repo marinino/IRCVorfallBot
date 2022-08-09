@@ -5,7 +5,7 @@ const Incident = require('../dataClasses/Incident.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('erstellevorfall')
+        .setName('melde_vorfall')
         .setDescription('Erstellt einen Vorfall in dem eine andere Person beschuldigt wird')
         .addUserOption(option => 
             option.setName('driverinvolved1')
@@ -95,7 +95,7 @@ module.exports = {
                 return messageDesc.author.id == initiator.id
             }
 
-            const collectorIncident = channel.createMessageCollector({filter, time: 300000})
+            const collectorIncident = channel.createMessageCollector({filter, time: 300000, max: 1})
 
             collectorIncident.on('collect', messageDesc => {
                 var desc = messageDesc.content;
@@ -108,55 +108,50 @@ module.exports = {
                     confirmMessage.react(IncidentManager.incidentManager.getAcceptEmoji());
                     confirmMessage.react(IncidentManager.incidentManager.getDenyEmoji());
 
-                    const collectorConfirm = confirmMessage.createReactionCollector({max: 3});
+                    const collectorConfirm = confirmMessage.createReactionCollector();
 
                     collectorConfirm.on('collect', (reaction, user) => {
 
                         interaction.guild.members.fetch(user.id).then((userForRole) => {
 
                             if(reaction.message.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.message.fetch();
                             }
                             if(reaction.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.fetch();
                             }
                             if(user.bot){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             if(!(reaction.message.guild)){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             if(reaction.emoji.name == IncidentManager.incidentManager.getAcceptEmoji() && 
                                 userForRole.roles.cache.has(IncidentManager.incidentManager.getStewardRolle())){
 
-                                driversInvolved.forEach((driver) => {
-                                    reaction.message.channel.permissionOverwrites.edit(driver.id, { SEND_MESSAGES: true })
-                                })
-
                                 var newTitel = incident.getBaseName();
-                                channel.setName(newTitel)
-                                incident.setName(newTitel)
-                                console.log('HUUUUUUUUUUUUUUUUUU')
-                                channel.bulkDelete(100);
+                                channel.setName(newTitel).then(() => {
+                                    console.log(`Der Name der Vorfallchannels wurde auf ${newTitel} geändert`)
+                                    incident.setName(newTitel)
+                                    channel.bulkDelete(100);
 
-                                const incidentFormEmbed = new MessageEmbed()
-                                    .setColor('#ff8c00')
-                                    .setTitle(`Vorfall ${incident.getName()}`)
-                                    .setDescription('Alle Infos zum Vorfall')
-                                    .addFields(
-                                        { name: 'Beschreibung', value: `${incident.getDescription()}` },
-                                    )
+                                    const incidentFormEmbed = new MessageEmbed()
+                                        .setColor('#ff8c00')
+                                        .setTitle(`Vorfall ${incident.getName()}`)
+                                        .setDescription('Alle Infos zum Vorfall')
+                                        .addFields(
+                                            { name: 'Beschreibung', value: `${incident.getDescription()}` },
+                                        )
 
-                                channel.send({ embeds: [incidentFormEmbed] });
+                                    channel.send({ embeds: [incidentFormEmbed] }).then(() => {
+                                        driversInvolved.forEach((driver) => {
+                                            reaction.message.channel.permissionOverwrites.edit(driver.id, { SEND_MESSAGES: true })
+                                        })
+                                    });
 
-                                IncidentManager.incidentManager.setCurrentIDLiga1(IncidentManager.incidentManager.getCurrentIDLiga1() + 1);
-
-                                console.log(incident.getID())
-
+                                    IncidentManager.incidentManager.setCurrentIDLiga1(IncidentManager.incidentManager.getCurrentIDLiga1() + 1);
+                                    
+                                })
                             } else if(reaction.emoji.name == IncidentManager.incidentManager.getDenyEmoji() && 
                                 userForRole.roles.cache.has(IncidentManager.incidentManager.getStewardRolle())){
 
@@ -164,7 +159,6 @@ module.exports = {
                                 channel.setName(newTitel + '-abgewießen')
                                 incident.setName(newTitel + '-abgewießen')
                                 
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 channel.send('Der Vorfall wurde abgewiesen');
                                 tempIncidents = IncidentManager.incidentManager.getIncidentsLiga1();
                                 tempIncidents.forEach((inc) => {
@@ -250,26 +244,22 @@ module.exports = {
                     confirmMessage.react(IncidentManager.incidentManager.getAcceptEmoji());
                     confirmMessage.react(IncidentManager.incidentManager.getDenyEmoji());
 
-                    const collectorConfirm = confirmMessage.createReactionCollector({max: 3});
+                    const collectorConfirm = confirmMessage.createReactionCollector();
 
                     collectorConfirm.on('collect', (reaction, user) => {
 
                         interaction.guild.members.fetch(user.id).then((userForRole) => {
 
                             if(reaction.message.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.message.fetch();
                             }
                             if(reaction.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.fetch();
                             }
                             if(user.bot){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             if(!(reaction.message.guild)){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             if(reaction.emoji.name == IncidentManager.incidentManager.getAcceptEmoji() && 
@@ -282,7 +272,6 @@ module.exports = {
                                 var newTitel = incident.getBaseName();
                                 channel.setName(newTitel)
                                 incident.setName(newTitel)
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 channel.bulkDelete(100);
 
                                 const incidentFormEmbed = new MessageEmbed()
@@ -306,7 +295,6 @@ module.exports = {
                                 channel.setName(newTitel + '-abgewießen')
                                 incident.setName(newTitel + '-abgewießen')
                                 
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 channel.send('Der Vorfall wurde abgewiesen');
                                 tempIncidents = IncidentManager.incidentManager.getIncidentsLiga2();
                                 tempIncidents.forEach((inc) => {
@@ -392,26 +380,22 @@ module.exports = {
                     confirmMessage.react(IncidentManager.incidentManager.getAcceptEmoji());
                     confirmMessage.react(IncidentManager.incidentManager.getDenyEmoji());
 
-                    const collectorConfirm = confirmMessage.createReactionCollector({max: 3});
+                    const collectorConfirm = confirmMessage.createReactionCollector();
 
                     collectorConfirm.on('collect', (reaction, user) => {
 
                         interaction.guild.members.fetch(user.id).then((userForRole) => {
 
                             if(reaction.message.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.message.fetch();
                             }
                             if(reaction.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.fetch();
                             }
                             if(user.bot){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             if(!(reaction.message.guild)){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             if(reaction.emoji.name == IncidentManager.incidentManager.getAcceptEmoji() && 
@@ -424,7 +408,6 @@ module.exports = {
                                 var newTitel = incident.getBaseName();
                                 channel.setName(newTitel)
                                 incident.setName(newTitel)
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 channel.bulkDelete(100);
 
                                 const incidentFormEmbed = new MessageEmbed()
@@ -448,7 +431,6 @@ module.exports = {
                                 channel.setName(newTitel + '-abgewießen')
                                 incident.setName(newTitel + '-abgewießen')
                                 
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 channel.send('Der Vorfall wurde abgewiesen');
                                 tempIncidents = IncidentManager.incidentManager.getIncidentsLiga3();
                                 tempIncidents.forEach((inc) => {

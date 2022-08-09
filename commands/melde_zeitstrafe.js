@@ -5,7 +5,7 @@ const Incident = require('../dataClasses/Incident.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('entfernezeitstrafe')
+        .setName('melde_zeitstrafe')
         .setDescription('Erstellt einen Vorfall in dem eine Zeitstrafe abgeuogen werden soll'),
 
     async execute(client, interaction, command){
@@ -53,7 +53,7 @@ module.exports = {
                 return messageDesc.author.id == initiator.id
             }
 
-            const collectorIncident = channel.createMessageCollector({filter, time: 300000})
+            const collectorIncident = channel.createMessageCollector({filter, time: 300000, max: 1})
 
             collectorIncident.on('collect', messageDesc => {
                 var desc = messageDesc.content;
@@ -66,7 +66,9 @@ module.exports = {
                     confirmMessage.react(IncidentManager.incidentManager.getAcceptEmoji());
                     confirmMessage.react(IncidentManager.incidentManager.getDenyEmoji());
 
-                    const collectorConfirm = confirmMessage.createReactionCollector({max: 3});
+                    
+
+                    const collectorConfirm = confirmMessage.createReactionCollector();
 
                     collectorConfirm.on('collect', (reaction, user) => {
 

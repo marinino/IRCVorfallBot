@@ -3,7 +3,7 @@ const IncidentManager = require('./init.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('urteilaussprechen')
+        .setName('urteil_vorfall')
         .setDescription('Hiermit wird das Urteil veröffentlicht')
         .addStringOption(option => 
             option.setName('strafpunkte')
@@ -62,20 +62,16 @@ module.exports = {
                         const collectorRevision = message.createReactionCollector({time: 172800000, max: 2});
     
                         collectorRevision.on('collect', (reaction, user) => {
-                            if(reaction.message.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
+                            if(reaction.message.partial){                              
                                 reaction.message.fetch();
                             }
-                            if(reaction.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
+                            if(reaction.partial){                              
                                 reaction.fetch();
                             }
-                            if(user.bot){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
+                            if(user.bot){                            
                                 return;
                             }
                             if(!(reaction.message.guild)){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             else if(reaction.emoji.name == IncidentManager.incidentManager.getDenyEmoji()){
@@ -127,19 +123,15 @@ module.exports = {
     
                         collectorRevision.on('collect', (reaction, user) => {
                             if(reaction.message.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.message.fetch();
                             }
                             if(reaction.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.fetch();
                             }
                             if(user.bot){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             if(!(reaction.message.guild)){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             else if(reaction.emoji.name == IncidentManager.incidentManager.getDenyEmoji()){
@@ -192,19 +184,15 @@ module.exports = {
     
                         collectorRevision.on('collect', (reaction, user) => {
                             if(reaction.message.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.message.fetch();
                             }
                             if(reaction.partial){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 reaction.fetch();
                             }
                             if(user.bot){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             if(!(reaction.message.guild)){
-                                console.log('HUUUUUUUUUUUUUUUUUU')
                                 return;
                             }
                             else if(reaction.emoji.name == IncidentManager.incidentManager.getDenyEmoji()){
@@ -253,19 +241,15 @@ module.exports = {
 
                     collectorRevision.on('collect', (reaction, user) => {
                         if(reaction.message.partial){
-                            console.log('HUUUUUUUUUUUUUUUUUU')
                             reaction.message.fetch();
                         }
                         if(reaction.partial){
-                            console.log('HUUUUUUUUUUUUUUUUUU')
                             reaction.fetch();
                         }
                         if(user.bot){
-                            console.log('HUUUUUUUUUUUUUUUUUU')
                             return;
                         }
                         if(!(reaction.message.guild)){
-                            console.log('HUUUUUUUUUUUUUUUUUU')
                             return;
                         }
                         else if(reaction.emoji.name == IncidentManager.incidentManager.getDenyEmoji()){
