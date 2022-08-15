@@ -16,11 +16,11 @@ module.exports = {
         .addUserOption(option => 
             option.setName('verurteilter')
                 .setDescription('Der gegen den die Strafe geht')
-                .setRequired(true))
+                .setRequired(false))
         .addStringOption(option => 
             option.setName('grund')
                 .setDescription('Grund für die Strafe')
-                .setRequired(true)),
+                .setRequired(false)),
 
     async execute(client, interaction, command){
 
@@ -34,6 +34,12 @@ module.exports = {
         //CHECK VALID
 
         if(strafpunkte > 0 && sekunden > 0){
+
+            if(verurteilter == null || grund == null){
+                interaction.channel.send(`Grund und Verurteilten angeben!`)
+                return;
+            } 
+
             interaction.channel.send(`Für den Vorfall bekommt ${verurteilter} ${strafpunkte} Strafpunkte und ${sekunden} Sekunden Strafe ` + 
             `für ${grund}. Für Revision mit ${IncidentManager.incidentManager.getDenyEmoji()} reagieren`).then((message) => {
 
@@ -95,16 +101,22 @@ module.exports = {
         }
         
         if(strafpunkte > 0 && sekunden == 0){
+
+            if(verurteilter == null || grund == null){
+                interaction.channel.send(`Grund und Verurteilten angeben!`)
+                return;
+            } 
+
             interaction.channel.send(`Für den Vorfall bekommt ${verurteilter} ${strafpunkte} Strafpunkte ` + 
             `für ${grund}.`).then((message) => {
                     
                 var tempIncidents = new Array();
                 
-                if(interaction.channel.name.contains('liga-1')){
+                if(interaction.channel.name.includes('liga-1')){
                     tempIncidents = IncidentManager.incidentManager.getIncidentsLiga1();
-                } else if(interaction.channel.name.contains('liga-2')){
+                } else if(interaction.channel.name.includes('liga-2')){
                     tempIncidents = IncidentManager.incidentManager.getIncidentsLiga2();
-                } else if(interaction.channel.name.contains('liga-3')){
+                } else if(interaction.channel.name.includes('liga-3')){
                     tempIncidents = IncidentManager.incidentManager.getIncidentsLiga3();
                 }
 
@@ -156,16 +168,22 @@ module.exports = {
         }
 
         if(strafpunkte == 0 && sekunden > 0){
+
+            if(verurteilter == null || grund == null){
+                interaction.channel.send(`Grund und Verurteilten angeben!`)
+                return;
+            } 
+
             interaction.channel.send(`Für den Vorfall bekommt ${verurteilter} ${sekunden} Sekunden ` + 
             `für ${grund}.`).then((message) => {
 
                 var tempIncidents = new Array();
                 
-                if(interaction.channel.name.contains('liga-1')){
+                if(interaction.channel.name.includes('liga-1')){
                     tempIncidents = IncidentManager.incidentManager.getIncidentsLiga1();
-                } else if(interaction.channel.name.contains('liga-2')){
+                } else if(interaction.channel.name.includes('liga-2')){
                     tempIncidents = IncidentManager.incidentManager.getIncidentsLiga2();
-                } else if(interaction.channel.name.contains('liga-3')){
+                } else if(interaction.channel.name.includes('liga-3')){
                     tempIncidents = IncidentManager.incidentManager.getIncidentsLiga3();
                 }
 
@@ -220,11 +238,11 @@ module.exports = {
 
                 var tempIncidents = new Array();
                 
-                if(interaction.channel.name.contains('liga-1')){
+                if(interaction.channel.name.includes('liga-1')){
                     tempIncidents = IncidentManager.incidentManager.getIncidentsLiga1();
-                } else if(interaction.channel.name.contains('liga-2')){
+                } else if(interaction.channel.name.includes('liga-2')){
                     tempIncidents = IncidentManager.incidentManager.getIncidentsLiga2();
-                } else if(interaction.channel.name.contains('liga-3')){
+                } else if(interaction.channel.name.includes('liga-3')){
                     tempIncidents = IncidentManager.incidentManager.getIncidentsLiga3();
                 }
 

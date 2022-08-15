@@ -9,7 +9,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('init')
         .setDescription('Muss einmal ausgeführt werden um Bot zu starten')
-        .addStringOption(option => 
+        .addIntegerOption(option => 
             option.setName('startindex')
                 .setDescription('Welche Nummer soll der erste Vorfall haben')
                 .setRequired(true)),
@@ -22,6 +22,10 @@ module.exports = {
         }else{
             console.log('all good')
         }
+
+        const startIndex = interaction.options.getInteger('startindex')
+
+        incidentManager.setCurrentIDLiga1(startIndex);
 
         interaction.reply('Vorfallbot gestartet');
     }  

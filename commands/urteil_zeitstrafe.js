@@ -7,7 +7,7 @@ module.exports = {
         .setDescription('Hiermit wird das Urteil veröffentlicht')
         .addBooleanOption(option => 
             option.setName('urteil')
-                .setDescription('Hier muss eingetragen werden, ob die Strafe abgezogen wurde oder nicht')
+                .setDescription('Hier muss eingetragen werden, ob die Strafe abgezogen wurde. True heißt Strafe wird abgezogen.')
                 .setRequired(true))
         .addIntegerOption(option => 
             option.setName('strafe')
