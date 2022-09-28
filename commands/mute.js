@@ -1,5 +1,5 @@
-const {SlashCommandBuilder} = require('@discordjs/builders')
-const {MessageEmbed} = require('discord.js');
+const {SlashCommandBuilder, MessageEmbed} = require('discord.js');
+
 const IncidentManager = require('./init.js');
 const Incident = require('../dataClasses/Incident.js');
 
@@ -45,23 +45,19 @@ module.exports = {
         const userToRemoveRights4 = interaction.options.getUser('user4')
         const userToRemoveRights5 = interaction.options.getUser('user5')
 
-        interaction.channel.permissionOverwrites.edit(userToRemoveRights1.id, { SEND_MESSAGES: false }).then(() => {
-            if(userToRemoveRights2 != null){
-                interaction.channel.permissionOverwrites.edit(userToRemoveRights2.id, { SEND_MESSAGES: false }).then(() => {
-                    if(userToRemoveRights3 != null){
-                        interaction.channel.permissionOverwrites.edit(userToRemoveRights3.id, { SEND_MESSAGES: false }).then(() => {
-                            if(userToRemoveRights4 != null){
-                                interaction.channel.permissionOverwrites.edit(userToRemoveRights4.id, { SEND_MESSAGES: false }).then(() => {
-                                    if(userToRemoveRights5 != null){
-                                        interaction.channel.permissionOverwrites.edit(userToRemoveRights5.id, { SEND_MESSAGES: false })
-                                    }
-                                })
-                            }
-                        })
-                    }
-                })
-            }
-        })
+        await interaction.channel.permissionOverwrites.edit(userToRemoveRights1.id, { SendMessages: false })
+        if(userToRemoveRights2 != null){
+            await interaction.channel.permissionOverwrites.edit(userToRemoveRights2.id, { SendMessages: false })
+        }
+        if(userToRemoveRights3 != null){
+            await interaction.channel.permissionOverwrites.edit(userToRemoveRights3.id, { SendMessages: false })
+        }
+        if(userToRemoveRights4 != null){
+            await interaction.channel.permissionOverwrites.edit(userToRemoveRights4.id, { SendMessages: false })
+        }   
+        if(userToRemoveRights5 != null){
+            await interaction.channel.permissionOverwrites.edit(userToRemoveRights5.id, { SendMessages: false })
+        }
 
     }  
 }

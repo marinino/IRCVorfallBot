@@ -1,5 +1,10 @@
-const {SlashCommandBuilder} = require('@discordjs/builders')
+const {SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle} = require('discord.js')
 const IncidentManager = require('./init.js');
+
+const btnRevision = new ButtonBuilder()
+    .setLabel('Revision einlegen')
+    .setCustomId('btnRevision')
+    .setStyle(ButtonStyle.Danger)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,10 +27,13 @@ module.exports = {
         var tempIncidents = new Array();
         if(interaction.channel.name.includes('liga-1')){
             tempIncidents = IncidentManager.incidentManager.getIncidentsLiga1();
+            strafenChannelID = IncidentManager.incidentManager.getStrafenChannelLiga1();
         } else if(interaction.channel.name.includes('liga-2')){
             tempIncidents = IncidentManager.incidentManager.getIncidentsLiga2();
+            strafenChannelID = IncidentManager.incidentManager.getStrafenChannelLiga2();
         } else if(interaction.channel.name.includes('liga-3')){
             tempIncidents = IncidentManager.incidentManager.getIncidentsLiga3();
+            strafenChannelID = IncidentManager.incidentManager.getStrafenChannelLiga3();
         }
 
         var incidentAtHand = null;
@@ -43,62 +51,29 @@ module.exports = {
         //CHECK VALID
 
         if(urteilBool){
-            interaction.channel.send(`Die Zeitstrafe für ${driverPenalized} wurde abgezogen. Für Revision ` + 
-                `mit ${IncidentManager.incidentManager.getDenyEmoji()} reagieren`).then((messageUrteil) => {
+            interaction.channel.send({ content: `Die Zeitstrafe für ${driverPenalized} wurde abgezogen. ` +
+                `**ACHTUNG, JEDER FAHRER HAT NUR 2 REVISIONEN PRO SAISON**, also nur den Knopf drücken, wenn ihr euch sicher seid.`,
+                components: [new ActionRowBuilder().addComponents(btnRevision)]}).then(() => {
 
-                tempIncidents.forEach((inc) => {
-                    if(interaction.channel.id == inc.getChannel().id){
-                        var oldTitel = inc.getBaseName();
-                        inc.setName(oldTitel + `-abgeschlossen`);
-                        interaction.channel.setName(oldTitel + `-abgeschlossen`);
-                    }
+                
+
+                interaction.guild.channels.cache.get(strafenChannelID).send(`${driverPenalized} bekommt seine ${strafeInt} Sekunden Strafe abgezogen.`).then(() => {
+                    tempIncidents.forEach((inc) => {
+                        if(interaction.channel.id == inc.getChannel().id){
+                            var oldTitel = inc.getBaseName();
+                            inc.setName(oldTitel + `-abgeschlossen`);
+                            interaction.channel.setName(oldTitel + `-abgeschlossen`);
+                        }
+                    })
                 })
 
-                interaction.guild.channels.cache.get(IncidentManager.incidentManager.getStrafenChannelLiga1()).send(`${driverPenalized} wird ` + 
-                    `seine ${strafeInt} Sekunden Strafe abgezogen.`).then(() => {
-
-                    const filter = (reaction, user) => {
-                        console.log(driverPenalized.id + '  ' + user.id)
-                        return driverPenalized.id == user.id && reaction.emoji.name == IncidentManager.incidentManager.getDenyEmoji()
-                    }
-                    
-                    messageUrteil.react(IncidentManager.incidentManager.getDenyEmoji()).then(() => {
-                        const collectorRevision = messageUrteil.createReactionCollector({filter, time: 172800000, max: 2});
-    
-                        collectorRevision.on('collect', (reaction, user) => {
-                            if(reaction.messageUrteil.partial){                              
-                                reaction.messageUrteil.fetch();
-                            }
-                            if(reaction.partial){                              
-                                reaction.fetch();
-                            }
-                            if(user.bot){                            
-                                return;
-                            }
-                            if(!(reaction.messageUrteil.guild)){
-                                return;
-                            }
-                            else if(reaction.emoji.name == IncidentManager.incidentManager.getDenyEmoji()){
-                                interaction.guild.members.fetch(IncidentManager.incidentManager.getRevisionsManagerID()).then((user) => {
-                                    user.send(`Es wurde eine Revision im Fall ${interaction.channel.name} eingereicht`).then(() => {
-                                        tempIncidents.forEach((inc) => {
-                                            if(interaction.channel.id == inc.getChannel().id){
-                                                var nextName = inc.getBaseName();
-                                                inc.setName(nextName + `-revision`);
-                                                var channelRev = inc.getChannel();
-                                                channelRev.setName(nextName + `-revision`);
-                                            }
-                                        })
-                                    })
-                                })
-                            }
-                        })
-                    })
-                })   
+               
+                  
             })   
         } else {
-            interaction.channel.send(`Die Zeitstrafe für ${driverPenalized} wurde nicht abgezogen. ` + 
-                `Für Revision mit ${IncidentManager.incidentManager.getDenyEmoji()} reagieren`).then((messageUrteil) => {
+            interaction.channel.send({ contents: `Die Zeitstrafe für ${driverPenalized} wurde nicht abgezogen. ` + 
+                `**ACHTUNG, JEDER FAHRER HAT NUR 2 REVISIONEN PRO SAISON**, also nur den Knopf drücken, wenn ihr euchh sicher seid.`,
+                components: [new ActionRowBuilder().addComponents(btnRevision)]}).then(() => {
                 
                 tempIncidents.forEach((inc) => {
                     if(interaction.channel.id == inc.getChannel().id){
@@ -108,44 +83,7 @@ module.exports = {
                     }
                 })
 
-                const filter = (reaction, user) => {
-                    console.log(driverPenalized.id + '  ' + user.id)
-                    return driverPenalized.id == user.id && reaction.emoji.name == IncidentManager.incidentManager.getDenyEmoji()
-                }
-
-                messageUrteil.react(IncidentManager.incidentManager.getDenyEmoji()).then(() => {
-                    const collectorRevision = messageUrteil.createReactionCollector({filter, time: 172800000, max: 2});
-
-                    collectorRevision.on('collect', (reaction, user) => {
-                        if(reaction.messageUrteil.partial){
-                            reaction.messageUrteil.fetch();
-                        }
-                        if(reaction.partial){
-                            reaction.fetch();
-                        }
-                        if(user.bot){
-                            return;
-                        }
-                        if(!(reaction.messageUrteil.guild)){
-                            return;
-                        }
-                        else if(reaction.emoji.name == IncidentManager.incidentManager.getDenyEmoji()){
-                            interaction.guild.members.fetch(IncidentManager.incidentManager.getRevisionsManagerID()).then((user) => {
-                                console.log(user);
-                                user.send(`Es wurde eine Revision im Fall ${interaction.channel.name} eingereicht`).then(() => {
-                                    tempIncidents.forEach((inc) => {
-                                        if(interaction.channel.id == inc.getChannel().id){
-                                            var nextName = inc.getBaseName();
-                                            inc.setName(nextName + `-revision`);
-                                            var channelRev = inc.getChannel();
-                                            channelRev.setName(nextName + `-revision`);
-                                        }
-                                    })
-                                })
-                            })
-                        }
-                    })
-                })
+            
                 
             });
         }

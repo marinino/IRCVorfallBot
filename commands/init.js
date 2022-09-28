@@ -1,4 +1,4 @@
-const {SlashCommandBuilder} = require('@discordjs/builders');
+const {SlashCommandBuilder} = require('discord.js');
 const IncidentManagers = require('../dataClasses/IncidentManager');
 
 var incidentManager = new IncidentManagers();

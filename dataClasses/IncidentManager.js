@@ -17,10 +17,12 @@ class IncidentManager {
         this.strafenChannelLiga2 = '947229977248690214';
         this.strafenChannelLiga3 = '947229977567428635';
         this.revisionsManagerID = '289036587159912448';
+        this.vorfallKategorieID = '990013809206886430';
         this.archivLiga1 = '990013613467123742';
         this.archivLiga2 = '990013729624178738';
         this.archivLiga3 = '990013776478736424';
         this.stewardRolleID = '947229969698930740';
+        this.tikTokMenschID = '269499201702854667'
     }
 
     getRennleiterRolleID(){
@@ -37,6 +39,10 @@ class IncidentManager {
 
     getStewardRolle(){
         return this.stewardRolleID;
+    }
+
+    getVorfallKategorieID(){
+        return this.vorfallKategorieID
     }
 
     setIncidentsLiga1(pIncidentsLiga1){
@@ -125,6 +131,10 @@ class IncidentManager {
 
     getArchivLiga3(){
         return this.archivLiga3;
+    }
+
+    getTikTokMenschID(){
+        return this.tikTokMenschID
     }
 }
 

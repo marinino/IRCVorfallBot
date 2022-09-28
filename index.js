@@ -1,19 +1,19 @@
 
 const Discord = require('discord.js');
-const { Client, Intents, Collection } = require('discord.js');
+const { Client, Intents, Collection, GatewayIntentBits } = require('discord.js');
 require('dotenv').config();
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fs = require('fs');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],});
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.MessageContent],});
 
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
 
 
 ['command_handler' , 'event_handler'].forEach(handler =>{
-  require(`./handlers/${handler}`)(client, Discord);
+  require(`./handlers/${handler}`)(client);
 });
 
 
