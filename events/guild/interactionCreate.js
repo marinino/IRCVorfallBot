@@ -311,7 +311,7 @@ module.exports = async (client, Discord, interaction) => {
 
                 IncidentManager.incidentManager.getIncidentsLiga1().forEach(async (inc) => {
                     if(inc.getChannel().id == interaction.channel.id){
-                        await interaction.channel.send(`Revision wird eingereicht`)
+                        await interaction.reply(`${interaction.member} hat eine Revision eingereicht`)
                         var date = new Date().toLocaleString()
                         console.log(`Die Revision wurde per Nachricht im Channel vermerkt. -- ${date}`)
                         var userForRevision = await interaction.guild.members.fetch(IncidentManager.incidentManager.getRevisionsManagerID())

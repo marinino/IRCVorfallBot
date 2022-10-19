@@ -45,10 +45,6 @@ module.exports = {
 
         if(strafpunkte > 0 && sekunden > 0 && !verwarnung){
 
-            if(true){
-                await interaction.channel.send('DONE')
-            }
-
             if(verurteilter == null || grund == null){
                 interaction.channel.send(`Grund und Verurteilten angeben!`)
                 return;
