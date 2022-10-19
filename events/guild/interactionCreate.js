@@ -410,7 +410,7 @@ module.exports = async (client, Discord, interaction) => {
 
             var inputLink = interaction.fields.getTextInputValue('textInputLink')
 
-            if(!(inputLink.includes('youtube.com') || inputLink.includes('twitch.tv'))){
+            if(!(inputLink.includes('youtu.be') || inputLink.includes('youtube.com') || inputLink.includes('twitch.tv'))){
                 interaction.reply(`Der Link wurde nicht als Youtube oder Twitch Link erkannt. Es sind nur solche Links erlaubt.`)
                 return;
             }
