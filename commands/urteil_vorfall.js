@@ -76,8 +76,9 @@ module.exports = {
             })
 
             await interaction.channel.send({content: `Für den Vorfall bekommt ${verurteilter} ${strafpunkte} Strafpunkte und ${sekunden} Sekunden Strafe ` + 
-            `für ${grund}. Für eine Revision kannst du mit ${IncidentManager.incidentManager.getDenyEmoji()} reagieren. ` +
-            `**ABER ACHTUNG, JEDER FAHRER HAT NUR 2 REVISIONEN PRO SAISON**, also nur reagieren, wenn ihr euch sicher seid.`, components: [new ActionRowBuilder().addComponents(btnRevision)]})
+                                        `für ${grund}. Unten auf dem Knopf könnt ihr eine ` + 
+                                        ` Revision einreichen, dabei kann es zu einer Änderung im Strafmaß kommen. ` +
+                                        `**ABER ACHTUNG, JEDER FAHRER HAT NUR 2 REVISIONEN PRO SAISON**, also nur reagieren, wenn ihr euch sicher seid.`, components: [new ActionRowBuilder().addComponents(btnRevision)]})
                    
             await interaction.guild.channels.cache.get(IncidentManager.incidentManager.getStrafenChannelLiga1()).send(`${verurteilter} bekommt ` + 
                 `${strafpunkte} Strafpunkte und ${sekunden} Sekunden Strafe für ${grund}`)
