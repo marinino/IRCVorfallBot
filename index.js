@@ -12,9 +12,10 @@ client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
 
 
-['command_handler' , 'event_handler'].forEach(handler =>{
-  require(`./handlers/${handler}`)(client);
-});
+const fileFolder = fs.readdirSync('./handlers').filter((file) => file.endsWith('.js'))
+for(const file of fileFolder){
+  require(`./handlers/${file}`)(client)
+}
 
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
