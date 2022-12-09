@@ -22,7 +22,7 @@ const textInputDesc = new TextInputBuilder()
 
 var ctr = 0;
 
-module.exports = async (client, Discord, interaction) => {
+module.exports = async (client, Discord, connection, interaction) => {
     console.log('Interaction create detected: ' + ctr )
     
     ctr++;
@@ -34,7 +34,7 @@ module.exports = async (client, Discord, interaction) => {
     
         try {
             console.log(cmd.data.name)
-            await cmd.execute(client, interaction, cmd.data.name)
+            await cmd.execute(client, interaction, cmd.data.name, connection)
         } catch (error) {
             console.log(error)
         }

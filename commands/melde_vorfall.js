@@ -53,7 +53,16 @@ module.exports = {
                 .setDescription('Beschuldigter Fahrer (OPTIONAL)')
                 .setRequired(false)),
 
-    async execute(client, interaction, command){
+    async execute(client, interaction, command, connection){
+
+        connection.ping((err) => {
+            if(err){
+                console.log(err)
+            } else {
+                console.log('Looks fine')
+            }
+            
+        })
 
         const driverInvolved1 = interaction.options.getUser('driverinvolved1')
         const driverInvolved2 = interaction.options.getUser('driverinvolved2')
