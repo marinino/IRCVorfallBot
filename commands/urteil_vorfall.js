@@ -1,4 +1,4 @@
-const {SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder} = require('discord.js')
+const {AttachmentBuilder, SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder} = require('discord.js')
 const IncidentManager = require('./init.js');
 
 const btnRevision = new ButtonBuilder()
@@ -39,7 +39,7 @@ module.exports = {
         const verurteilter = interaction.options.getUser('verurteilter')
         const grund = interaction.options.getString('grund')
 
-        interaction.reply(`Urteil wurde gestartet`);
+        //interaction.reply(`Urteil wurde gestartet`);
 
         //CHECK VALID
 
@@ -75,10 +75,24 @@ module.exports = {
                 }
             })
 
-            await interaction.channel.send({content: `Für den Vorfall bekommt ${verurteilter} ${strafpunkte} Strafpunkte und ${sekunden} Sekunden Strafe ` + 
-                                        `für ${grund}. Unten auf dem Knopf könnt ihr eine ` + 
-                                        ` Revision einreichen, dabei kann es zu einer Änderung im Strafmaß kommen. ` +
-                                        `**ABER ACHTUNG, JEDER FAHRER HAT NUR 2 REVISIONEN PRO SAISON**, also nur reagieren, wenn ihr euch sicher seid.`, components: [new ActionRowBuilder().addComponents(btnRevision)]})
+            const file = new AttachmentBuilder('files/index.jpg')
+            const file2 = new AttachmentBuilder('files/IRC_Logo.png')
+
+            const embedUrteil = new EmbedBuilder()
+                .setColor('#bababa')
+                .setAuthor({name: 'IRC', iconURL: 'attachment://IRC_Logo.png', url:'https://www.ircf1.de/'})
+                .setDescription('Der Vorfall wurde von den Stewards bewertet')
+                .setThumbnail('attachment://index.jpg')
+                .addFields(
+                    {name: 'Schuldiger Fahrer', value: `${verurteilter}`},
+                    {name: 'Strafpunkte', value: `${strafpunkte}`, inline: true},
+                    {name: 'Strafsekunden', value: `${sekunden}`, inline: true},
+                    {name: 'Grund', value: `${grund}`},
+                    {name: 'Revision', value: 'Unten auf dem Knopf könnt ihr eine Revision einreichen, dabei kann es zu einer Änderung im Strafmaß kommen.' +
+                                                '**ABER ACHTUNG, JEDER FAHRER HAT NUR 2 REVISIONEN PRO SAISON**, also nur reagieren, wenn ihr euch sicher seid.'}
+                )
+
+            await interaction.reply({embeds: [embedUrteil], components: [new ActionRowBuilder().addComponents(btnRevision)], files: [file, file2]})
                    
             await interaction.guild.channels.cache.get(IncidentManager.incidentManager.getStrafenChannelLiga1()).send(`${verurteilter} bekommt ` + 
                 `${strafpunkte} Strafpunkte und ${sekunden} Sekunden Strafe für ${grund}`)
