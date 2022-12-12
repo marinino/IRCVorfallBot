@@ -48,7 +48,7 @@ connection.query('CREATE TABLE IF NOT EXISTS incidents_testserver ('+
 });
 
 
-['command_handler' , 'event_handler'].forEach(handler =>{
+['command_handler' , 'event_handler', 'presence_handler'].forEach(handler =>{
   require(`./handlers/${handler}`)(client, Discord, connection);
 });
 

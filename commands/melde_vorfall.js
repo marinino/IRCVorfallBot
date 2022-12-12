@@ -79,13 +79,33 @@ module.exports = {
 
         if(interaction.channel.id == IncidentManager.incidentManager.getVorfallChannelLiga1()){
 
-            var sentMessages = 0;
+            connection.query(`SELECT inc_id FROM incidents_testserver`, function(err, result, fields){
+
+                if(err){
+                    console.log(err);
+                    return;
+                }
+
+                if(result.length == 0){
+                    index = 1;
+                } else {
+                    var maxID = 0;
+                    // Find max ID in returned array
+                    result.forEach(id => {
+                        if(id > maxID){
+                            maxID = id;
+                        }
+                    })
+
+                    index = maxID + 1;
+                }
+                console.log(result[0].inc_id);
+            })
+
             league = 'liga-1';
-            index = IncidentManager.incidentManager.getCurrentIDLiga1() + 1;
-            IncidentManager.incidentManager.setCurrentIDLiga1(index);
 
             var baseTitel = league + '-' + index;
-            incident.setBaseName(baseTitel);
+            
 
             var titel = baseTitel + '-noted';
             var initiator = await interaction.guild.members.fetch(interaction.user.id);
@@ -122,38 +142,27 @@ module.exports = {
                 await channel.permissionOverwrites.create(driver.id, { ViewChannel: true, SendMessages: false })
             })
 
-            incident.setChannel(channel);
-            incident.setDriversInvoled(driversInvolved);
-            incident.setInitiator(initiator);
-            incident.setName(titel);
-            incident.setID(index)
-
-            var tempIncidents = IncidentManager.incidentManager.getIncidentsLiga1();
-            tempIncidents.push(incident);
-
             var vorlage = await channel.send({ content: `Dein Vorfall wurde erstellt <@${initiator.id}>`+
                                                 `\n ***Der Vorfall muss von den Stewards akzeptiert werden, oder der Vorfall kann abgelehnt werden.***`,
                                             	components: [new ActionRowBuilder().addComponents(btnAccept, btnDecline)]});
 
-            incident.setMsgVorlage(vorlage);
+            
 
             var msgZeitpunkt = await channel.send({ content: `Wenn du auf den Knopf drückst öffnet sich ein Feld. ` +
                                                     `Bitte hier eintragen wann der Vorfall war. Quali, Runde 1, Runde 10,....`,
                                                     components: [new ActionRowBuilder().addComponents(time)]})
 
-            incident.setMsgZeitpunkt(msgZeitpunkt)
+            i
 
             var msgBeschreibung = await channel.send({ content: `Wenn du auf den Knopf drückst öffnet sich ein Feld. ` + 
                                                     `Bitte hier eintragen was passiert ist in Form einer kurzen Beschreibung.`,
                                                     components: [new ActionRowBuilder().addComponents(desc)]})
 
-            incident.setMsgBeschreibung(msgBeschreibung);
+            
 
             var msgLink = await channel.send({ content: `Wenn du auf den Knopf drückst öffnet sich ein Feld. `+ 
                                                     `Bitte hier eintragen den Link zum Video angeben`,
                                                     components: [new ActionRowBuilder().addComponents(link)]})
-
-            incident.setMsgLink(msgLink);
 
             var embedInfo = new EmbedBuilder()
                 .setTitle(`Embed mit Angaben`)
@@ -161,14 +170,33 @@ module.exports = {
                 .setColor('#8a0339')
                 .addFields(
                     [
-                        {name: `Zeitpunkt:`, value: `${incident.getZeitpunkt()}`},
-                        {name: `Beschreibung:`, value: `${incident.getDescription()}`},
-                        {name: `Link:`, value: `${incident.getLink()}`}
+                        {name: `Zeitpunkt:`, value: `k.A.`},
+                        {name: `Beschreibung:`, value: `$k.A.`},
+                        {name: `Link:`, value: `k.A.`}
                     ]
                 )
 
             var embedInfoMessage = await channel.send({ embeds: [embedInfo]})
-            incident.setEmbedInputMessage(embedInfoMessage);
+            
+            var driversInvolvedString = '';
+            driversInvolved.forEach(driver => {
+                driversInvolvedString.concat()
+            })
+
+            connection.query(`INSERT INTO incidents_testserver (inc_id, basename, current_name, 
+                initiator, drivers_involved, channel, msg_vorlage, msg_zeitpunkt, 
+                msg_description, msg_link, embed_input_message)
+                VALUES (${index}, ${baseTitel}, ${titel}, ${initiator.id}, ${driversInvolvedString}, 
+                ${channel.id}, ${vorlage.id}, ${msgZeitpunkt.id}, ${msgBeschreibung.id}, 
+                ${msgLink.id}, ${embedInfoMessage.id})`, function(error, result) {
+                    if(error){
+                        console.log(error)
+                    } else {
+                        console.log(result)
+                    }
+                    
+                });
+
         }
     }  
 }
